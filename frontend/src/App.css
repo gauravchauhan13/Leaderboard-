@@ -1,0 +1,309 @@
+/* --- Import Google Fonts --- */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;600;700&display=swap');
+
+/* --- CSS Houdini Property for Animated Score --- */
+@property --score {
+  syntax: '<integer>';
+  initial-value: 0;
+  inherits: false;
+}
+
+/* --- Cyber-Arena Theme Variables --- */
+:root {
+  --background-color: #0A0A1A;
+  --primary-accent: #00FFFF; /* Neon Cyan */
+  --text-color: #EAEAEA;
+  --secondary-accent: #BE9EFF; /* Electric Purple */
+  --border-color: rgba(255, 255, 255, 0.15);
+  --glass-bg: rgba(30, 41, 59, 0.4);
+  --shadow-color: rgba(0, 0, 0, 0.37);
+  --font-heading: 'Press Start 2P', cursive;
+  --font-body: 'Inter', sans-serif;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  background-color: var(--background-color);
+  color: var(--text-color);
+  /* The particle background from tsParticles will be layered underneath */
+}
+
+/* --- App Layout & Main Title --- */
+.App {
+  text-align: center;
+  padding: clamp(1rem, 5vw, 3rem);
+}
+
+.App h1 {
+  font-family: var(--font-heading);
+  font-size: clamp(1.5rem, 5vw, 2.5rem);
+  color: var(--primary-accent);
+  text-shadow: 0 0 10px var(--primary-accent), 0 0 20px var(--primary-accent);
+  margin-bottom: 3rem;
+  letter-spacing: 2px;
+  animation: fadeInDown 1s ease-out;
+}
+
+/* --- Container & Card Layout --- */
+.container {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+.form-container, .leaderboard-container {
+  flex: 1;
+  min-width: 320px;
+  max-width: 500px;
+  animation: slideUpFadeIn 0.8s ease-out forwards;
+  opacity: 0;
+}
+.leaderboard-container { animation-delay: 0.2s; }
+
+/* --- Glassmorphism Panels --- */
+.form-card, .leaderboard-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 16px;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 8px 32px 0 var(--shadow-color);
+  padding: 2rem;
+}
+
+.form-card h3, .leaderboard-card h2 {
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  color: var(--text-color);
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 0.75rem;
+  margin: 0 0 1.5rem 0;
+}
+
+/* --- Themed Inputs & Selects --- */
+.form-section {
+  position: relative;
+  margin-bottom: 2rem; /* Creates space between form sections */
+}
+
+.form-section:last-child {
+    margin-bottom: 0; /* Removes extra space at the bottom */
+}
+
+input[type="text"], select {
+  width: 100%;
+  padding: 12px 15px;
+  margin-bottom: 1rem;
+  background-color: rgba(10, 10, 26, 0.5);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  box-sizing: border-box;
+  font-size: 1rem;
+  font-family: var(--font-body);
+  color: var(--text-color);
+  transition: all 0.2s ease;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+select {
+  background-image: url('data:image/svg+xml;utf8,<svg fill="white" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  padding-right: 3rem; /* Make space for the arrow */
+}
+
+input[type="text"]:focus, select:focus {
+  outline: none;
+  border-color: var(--primary-accent);
+  box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
+}
+
+/* --- High-Tech Glow Button --- */
+button {
+  width: 100%;
+  padding: 14px 20px;
+  background-color: transparent;
+  color: var(--primary-accent);
+  border: 2px solid var(--primary-accent);
+  font-size: 1rem;
+  font-weight: bold;
+  font-family: var(--font-body);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.75rem;
+  position: relative;
+  overflow: hidden; /* For pseudo-element effect */
+  /* clip-path property removed for sharp edges */
+  border-radius: 0;
+}
+
+/* Pseudo-element for the animated hover fill */
+button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background-color: var(--primary-accent);
+  transition: left 0.3s ease-in-out;
+  z-index: -1; /* Place it behind the text/icon */
+}
+
+button:hover:not(:disabled) {
+  color: var(--background-color);
+  box-shadow: 0 0 25px var(--primary-accent), 0 0 40px rgba(0, 255, 255, 0.5);
+  transform: translateY(-2px);
+}
+
+/* Trigger the fill animation on hover */
+button:hover:not(:disabled)::before {
+  left: 0;
+}
+
+button:active:not(:disabled) {
+  transform: translateY(0) scale(0.97);
+  box-shadow: 0 0 15px var(--primary-accent);
+}
+
+button:disabled {
+  border-color: #4a5568;
+  color: #4a5568;
+  background-color: transparent;
+  box-shadow: none;
+  cursor: not-allowed;
+  /* clip-path property removed for sharp edges */
+  border-radius: 0;
+}
+
+
+/* --- Leaderboard Table & Animated Score --- */
+.leaderboard-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.leaderboard-table th, .leaderboard-table td {
+  padding: 1rem;
+  text-align: left;
+}
+.leaderboard-table tbody tr {
+  border-bottom: 1px solid var(--border-color);
+}
+.leaderboard-table .rank {
+  font-size: 1.5rem;
+  text-align: center;
+  width: 60px;
+  font-weight: bold;
+}
+.leaderboard-table .points {
+  font-weight: bold;
+  color: var(--primary-accent);
+  text-align: right;
+  font-family: 'Roboto Mono', monospace;
+}
+.score-display {
+  transition: --score 0.5s ease-out;
+  counter-set: num var(--score);
+}
+.score-display::after {
+  content: counter(num);
+}
+
+/* --- Notification Styles --- */
+.notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: #ffffff;
+  padding: 1rem 1.5rem;
+  z-index: 1000;
+  font-weight: 600;
+  overflow: hidden;
+  background: rgba(30, 41, 59, 0.6);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 8px 32px 0 var(--shadow-color);
+  transform: translateX(120%);
+  transition: transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+.notification.show { transform: translateX(0); }
+.notification.exit { transform: translateX(120%); }
+.notification.success { border-left: 5px solid #2ecc71; }
+.notification.error { border-left: 5px solid #e74c3c; }
+.notification-icon { flex-shrink: 0; }
+.notification-message { margin: 0; flex-grow: 1; }
+.notification-progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 4px;
+  background-color: rgba(255, 255, 255, 0.5);
+  animation: countdown 3s linear forwards;
+}
+@keyframes countdown { from { width: 100%; } to { width: 0%; } }
+
+/* --- Pagination Controls (Keep them simple) --- */
+.pagination-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-color);
+}
+.pagination-controls button {
+  width: auto;
+  padding: 8px 16px;
+  font-size: 0.9rem;
+  clip-path: none;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  background: transparent;
+  color: var(--text-muted-color);
+  text-transform: none; /* No uppercase for pagination */
+  letter-spacing: normal;
+}
+/* Remove the fill effect for pagination buttons */
+.pagination-controls button::before {
+    display: none;
+}
+.pagination-controls button:hover:not(:disabled) {
+  background: var(--border-color);
+  color: var(--text-color);
+  box-shadow: none;
+}
+.pagination-controls button:disabled {
+  color: #4a5568;
+  border-color: #4a5568;
+  background: transparent;
+  clip-path: none; /* Keep pagination disabled buttons simple */
+  border-radius: 6px;
+}
+.pagination-controls span {
+  color: var(--text-muted-color);
+  font-weight: 500;
+}
+
+/* --- Spacing & Animations --- */
+.leaderboard-container .leaderboard-card:last-child { margin-top: 2rem; }
+@keyframes slideUpFadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+
+/* --- Responsive Design --- */
+@media (max-width: 768px) {
+  .container { flex-direction: column; align-items: center; gap: 1.5rem; }
+}
